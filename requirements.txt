@@ -1,2 +1,6 @@
-watchdog 
+watchdog
 pdfplumber
+Flask
+dotenv
+mysql-connector-python
+bcrypt
