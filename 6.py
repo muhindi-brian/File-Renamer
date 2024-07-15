@@ -70,8 +70,8 @@ def ensure_directory_exists(path):
 
 if __name__ == "__main__":
     # Define paths
-    invoice_path = r"C:\Users\brian\OneDrive\Desktop\MOJOKDEVKE\CBSG-ERP\INVOICES"
-    estimate_path = r"C:\Users\brian\OneDrive\Desktop\MOJOKDEVKE\CBSG-ERP\PFI"
+    invoice_path = r"C:\Users\brian\OneDrive\Desktop\MOJOKDEVKE\INVOICES"
+    estimate_path = r"C:\Users\brian\OneDrive\Desktop\MOJOKDEVKE\ESTIMATES"
 
     # Check if directories exist
     if not ensure_directory_exists(invoice_path) or not ensure_directory_exists(estimate_path):
