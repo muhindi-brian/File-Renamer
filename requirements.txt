@@ -1,2 +1,4 @@
-watchdog 
+watchdog
 pdfplumber
+Flask
+dotenv
