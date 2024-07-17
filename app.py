@@ -154,6 +154,104 @@ def view_activity():
 
     return render_template('activity.html', activities=activities)
 
+# Database connection function
+def get_db_connection():
+    return mysql.connector.connect(
+        host='localhost',
+        user=DB_USER,
+        password=DB_PASSWORD,
+        database=DB_NAME
+    )
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        # Get form data with fallback to avoid KeyError
+        full_name = request.form.get('full_name', '')
+        date_of_birth = request.form.get('date_of_birth', '')
+        gender = request.form.get('gender', '')
+        nationality = request.form.get('nationality', '')
+        id_number = request.form.get('id_number', '')
+        national_id_type = request.form.get('national_id_type', '')
+        expiry_date = request.form.get('expiry_date', '')
+        email = request.form.get('email', '')
+        phone_number = request.form.get('phone_number', '')
+        address_street = request.form.get('address_street', '')
+        address_city = request.form.get('address_city', '')
+        address_state = request.form.get('address_state', '')
+        address_zip = request.form.get('address_zip', '')
+        address_country = request.form.get('address_country', '')
+        occupation = request.form.get('occupation', '')
+        company_name = request.form.get('company_name', '')
+
+        # Create database connection
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor()
+
+        # Find the user ID based on username
+        cursor.execute("SELECT id FROM users WHERE username = %s", (session['username'],))
+        user = cursor.fetchone()
+
+        if user:
+            user_id = user[0]
+            # Update user profile
+            cursor.execute("""
+                INSERT INTO user_profiles (user_id, full_name, date_of_birth, gender, nationality, id_number, national_id_type, expiry_date, email, phone_number, address_street, address_city, address_state, address_zip, address_country, occupation, company_name)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE 
+                full_name = VALUES(full_name),
+                date_of_birth = VALUES(date_of_birth),
+                gender = VALUES(gender),
+                nationality = VALUES(nationality),
+                id_number = VALUES(id_number),
+                national_id_type = VALUES(national_id_type),
+                expiry_date = VALUES(expiry_date),
+                email = VALUES(email),
+                phone_number = VALUES(phone_number),
+                address_street = VALUES(address_street),
+                address_city = VALUES(address_city),
+                address_state = VALUES(address_state),
+                address_zip = VALUES(address_zip),
+                address_country = VALUES(address_country),
+                occupation = VALUES(occupation),
+                company_name = VALUES(company_name)
+            """, (user_id, full_name, date_of_birth, gender, nationality, id_number, national_id_type, expiry_date, email, phone_number, address_street, address_city, address_state, address_zip, address_country, occupation, company_name))
+            db_connection.commit()
+            flash('Profile updated successfully', 'success')
+        else:
+            flash('User not found', 'danger')
+
+        cursor.close()  # Close the cursor
+        db_connection.close()  # Close the database connection
+
+    # Fetch user profile data
+    db_connection = get_db_connection()
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT id FROM users WHERE username = %s", (session['username'],))
+    user = cursor.fetchone()
+
+    user_data = None  # Initialize user_data
+
+    if user:
+        user_id = user[0]
+        cursor.execute("SELECT * FROM user_profiles WHERE user_id = %s", (user_id,))
+        user_data = cursor.fetchone()  # Get user profile data
+    else:
+        user_data = None
+
+    cursor.close()  # Close the cursor
+    db_connection.close()  # Close the database connection
+    return render_template('profile.html', user_data=user_data)
+
+
+
+
+
+
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
