@@ -8,7 +8,7 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: url('https://img.freepik.com/free-vector/realistic-abstract-technology-particle-background_23-2148431263.jpg?t=st=1721205025~exp=1721208625~hmac=13b4ae7951914418ef77645441e448f77062097809ae5646e8732d2f0cec12c7&w=1380') no-repeat center center fixed;
+            background: url('https://img.freepik.com/premium-vector/abstract-plexus-background-with-connecting-dots-lines_302149-235.jpg?w=1380') no-repeat center center fixed;
             background-size: cover;
             height: 100vh;
             display: flex;
@@ -27,6 +27,8 @@
     </style>
 </head>
 <body>
+    {% include 'nav.html' %}
+    
     <div class="card">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
