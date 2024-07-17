@@ -247,8 +247,48 @@ def profile():
     return render_template('profile.html', user_data=user_data)
 
 
+@app.route('/settings', methods=['GET', 'POST'])
+def settings():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        new_username = request.form.get('username', '')
+        current_password = request.form.get('current_password', '')
+        new_password = request.form.get('new_password', '')
+        confirm_password = request.form.get('confirm_password', '')
 
+        # Create database connection
+        db_connection = get_db_connection()
+        cursor = db_connection.cursor()
 
+        # Verify current password
+        cursor.execute("SELECT password FROM users WHERE username = %s", (session['username'],))
+        user = cursor.fetchone()
+
+        if user and bcrypt.checkpw(current_password.encode('utf-8'), user[0].encode('utf-8')):
+            # Check if new passwords match
+            if new_password == confirm_password:
+                hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+
+                # Update username and password
+                cursor.execute("UPDATE users SET username = %s, password = %s WHERE username = %s",
+                               (new_username, hashed_password, session['username']))
+                db_connection.commit()
+
+                # Update session username
+                session['username'] = new_username
+
+                flash('Settings updated successfully', 'success')
+            else:
+                flash('New passwords do not match', 'danger')
+        else:
+            flash('Current password is incorrect', 'danger')
+
+        cursor.close()  # Close the cursor
+        db_connection.close()  # Close the database connection
+
+    return render_template('settings.html')
 
 
 
