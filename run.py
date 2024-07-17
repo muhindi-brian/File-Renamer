@@ -170,7 +170,8 @@ def upload_file():
                 os.remove(temp_file_path)  # Clean up temp file
                 return redirect(request.url)
 
-    return render_template('upload.html')
+    return render_template('index1.html')
 
 if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
     app.run(debug=True)
