@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from datetime import datetime
 import bcrypt
 
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -52,6 +53,7 @@ def extract_info(pdf_path, keyword_client, keyword_number):
         log_activity('Error extracting info', str(e), pdf_path)
     return client_name, doc_number
 
+
 def log_activity(activity, user_data, url):
     connection = mysql.connector.connect(
         host='localhost',
@@ -65,6 +67,7 @@ def log_activity(activity, user_data, url):
     connection.commit()
     cursor.close()
     connection.close()
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -89,6 +92,7 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -117,6 +121,7 @@ def login():
 
     return render_template('login.html')
 
+#Shows the username on header
 @app.route('/dashboard')
 def dashboard():
     if 'username' not in session:
@@ -140,6 +145,8 @@ def view_activity():
         return redirect(url_for('login'))
     
     username = session['username']
+    print(f"Current logged-in user: {username}")  # Debugging
+
     connection = mysql.connector.connect(
         host='localhost',
         user=DB_USER,
@@ -152,6 +159,10 @@ def view_activity():
     cursor.close()
     connection.close()
 
+    # Debugging: print fetched activities
+    print(f"Fetched activities: {activities}")  # Debugging
+    # print(f"Fetched activities for {username}: {activities}")
+    
     return render_template('activity.html', activities=activities)
 
 # Database connection function
