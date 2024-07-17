@@ -122,27 +122,16 @@ def dashboard():
     if 'username' not in session:
         flash('You need to log in first.', 'warning')
         return redirect(url_for('login'))
-    return render_template('dashboard.html')  # Render your dashboard template
+    username = session['username']
+    return render_template('dashboard.html', username=username)  # Pass username to template
 
-# @app.route('/view_activity')
-# def activity():
+# @app.route('/dashboard')
+# def dashboard():
 #     if 'username' not in session:
 #         flash('You need to log in first.', 'warning')
 #         return redirect(url_for('login'))
+#     return render_template('dashboard.html')  # Render your dashboard template
 
-#     connection = mysql.connector.connect(
-#         host='localhost',
-#         user=DB_USER,
-#         password=DB_PASSWORD,
-#         database=DB_NAME
-#     )
-#     cursor = connection.cursor()
-#     cursor.execute("SELECT activity, user_data, url, timestamp FROM uploads WHERE user_data = %s", (session['username'],))
-#     activities = cursor.fetchall()
-#     cursor.close()
-#     connection.close()
-
-#     return render_template('activity.html', activities=activities)
 
 @app.route('/view_activity')
 def view_activity():
