@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
     <title>Dashboard</title>
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -80,7 +81,7 @@
                     </div>
                     <div class="card-body">
                         <p>Manage your account settings and preferences.</p>
-                        <a href="#" class="btn btn-outline-primary">Edit Settings</a>
+                        <a href="{{ url_for('settings') }}" class="btn btn-outline-primary">Edit Settings</a>
                     </div>
                 </div>
             </div>
@@ -89,6 +90,20 @@
             <small>&copy; 2024 Brian Muhindi Mwangi. All rights reserved.</small>
         </footer>
     </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+              console.log('Service Worker registered with scope:', registration.scope);
+            }).catch((error) => {
+              console.log('Service Worker registration failed:', error);
+            });
+        }
+      </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- Bootstrap 5 JS and dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

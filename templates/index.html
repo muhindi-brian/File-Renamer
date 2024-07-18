@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
     <title>Upload File</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -26,8 +27,12 @@
             background-color: linear-gradient(#e66465, #9198e5);
         }
     </style>
+    
 </head>
 <body>
+
+    
+
     {% include 'nav.html' %}
     
     <div class="card">
@@ -49,12 +54,26 @@
             <button type="submit" class="btn btn-primary btn-block">Upload</button>
         </form>
         <br>
-        <a href="{{ url_for('logout') }}" class="btn btn-secondary btn-block">Logout</a>
-        <hr>
+        <!-- <a href="{{ url_for('logout') }}" class="btn btn-secondary btn-block">Logout</a>
+        <hr> -->
         <footer class="text-center">
             <small>&copy; 2024 Brian Muhindi Mwangi. All rights reserved.</small>
         </footer>
     </div>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+              console.log('Service Worker registered with scope:', registration.scope);
+            }).catch((error) => {
+              console.log('Service Worker registration failed:', error);
+            });
+        }
+      </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

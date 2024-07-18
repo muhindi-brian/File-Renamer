@@ -122,7 +122,7 @@ def login():
     return render_template('login.html')
 
 #Shows the username on header
-@app.route('/dashboard')
+@app.route('/')
 def dashboard():
     if 'username' not in session:
         flash('You need to log in first.', 'warning')
@@ -137,16 +137,13 @@ def dashboard():
 #         return redirect(url_for('login'))
 #     return render_template('dashboard.html')  # Render your dashboard template
 
-
-@app.route('/view_activity')
+@app.route('/view_activity', methods=['GET', 'POST'])
 def view_activity():
     if 'username' not in session:
         flash('You need to log in first.', 'warning')
         return redirect(url_for('login'))
     
     username = session['username']
-    print(f"Current logged-in user: {username}")  # Debugging
-
     connection = mysql.connector.connect(
         host='localhost',
         user=DB_USER,
@@ -154,16 +151,50 @@ def view_activity():
         database=DB_NAME
     )
     cursor = connection.cursor()
-    cursor.execute("SELECT activity, user_data, url, timestamp FROM uploads WHERE user_data = %s ORDER BY timestamp DESC", (username,))
+    
+    # Initialize query and parameters
+    query = "SELECT activity, user_data, url, timestamp FROM uploads WHERE user_data = %s"
+    params = [username]
+
+    # Handle search functionality
+    search_term = request.args.get('search', '')
+    if search_term:
+        query += " AND (activity LIKE %s OR url LIKE %s)"
+        params.extend(['%' + search_term + '%', '%' + search_term + '%'])
+
+    cursor.execute(query + " ORDER BY timestamp DESC", tuple(params))
     activities = cursor.fetchall()
     cursor.close()
     connection.close()
 
-    # Debugging: print fetched activities
-    print(f"Fetched activities: {activities}")  # Debugging
-    # print(f"Fetched activities for {username}: {activities}")
+    return render_template('activity.html', activities=activities, search_term=search_term)
+
+# @app.route('/view_activity')
+# def view_activity():
+#     if 'username' not in session:
+#         flash('You need to log in first.', 'warning')
+#         return redirect(url_for('login'))
     
-    return render_template('activity.html', activities=activities)
+#     username = session['username']
+#     print(f"Current logged-in user: {username}")  # Debugging
+
+#     connection = mysql.connector.connect(
+#         host='localhost',
+#         user=DB_USER,
+#         password=DB_PASSWORD,
+#         database=DB_NAME
+#     )
+#     cursor = connection.cursor()
+#     cursor.execute("SELECT activity, user_data, url, timestamp FROM uploads WHERE user_data = %s ORDER BY timestamp DESC", (username,))
+#     activities = cursor.fetchall()
+#     cursor.close()
+#     connection.close()
+
+#     # Debugging: print fetched activities
+#     print(f"Fetched activities: {activities}")  # Debugging
+#     # print(f"Fetched activities for {username}: {activities}")
+    
+#     return render_template('activity.html', activities=activities)
 
 # Database connection function
 def get_db_connection():
@@ -309,7 +340,7 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         if 'file' not in request.files:
@@ -357,6 +388,15 @@ def upload_file():
                 return redirect(request.url)
 
     return render_template('index.html')
+
+@app.route('/manifest.json')
+def manifest():
+    return app.send_static_file('manifest.json')
+
+@app.route('/service-worker.js')
+def service_worker():
+    return app.send_static_file('service-worker.js')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

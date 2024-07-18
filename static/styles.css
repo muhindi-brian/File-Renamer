@@ -1,0 +1,37 @@
+/* styles.css */
+
+/* Default Light Mode Styles */
+body {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.navbar {
+    background-color: #f8f9fa; /* Light navbar */
+}
+
+body.dark-mode .navbar {
+    background-color: #343a40; /* Dark navbar */
+}
+
+.table {
+    background-color: #ffffff;
+}
+
+body.dark-mode .table {
+    background-color: #1e1e1e; /* Dark table background */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Light button */
+}
+
+body.dark-mode .btn-primary {
+    background-color: #375a7f; /* Dark button */
+}
