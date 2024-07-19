@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <title>File Renamer: By Brian Muhindi Mwangi</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .header {
+            background: url('https://img.freepik.com/free-photo/top-view-statistics-presentation-with-arrow_23-2149023752.jpg') no-repeat center center/cover;
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            font-weight: bold;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+        }
+
+        .features {
+            padding: 60px 0;
+        }
+
+        .features .icon {
+            font-size: 4rem;
+            color: #6c757d;
+        }
+
+        .features .card {
+            transition: transform 0.2s;
+        }
+
+        .features .card:hover {
+            transform: scale(1.05);
+        }
+
+        .cta {
+            background-color: #007bff;
+            color: white;
+            padding: 60px 0;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .footer a {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    {% include 'nav-2.html' %}
+
+    <!-- Hero Section -->
+    <header class="header">
+        <div>
+            <h1>Welcome to Our Web Application</h1>
+            <p>Manage your documents efficiently and securely.</p>
+            <a href="/login" class="btn btn-primary btn-lg mt-3">Get Started</a>
+        </div>
+    </header>
+
+    <section class="features container text-center">
+        <h2 class="mb-5">Features</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card p-4 mb-4">
+                    <div class="icon mb-3">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h4>Easy Upload</h4>
+                    <p>Upload your files with a simple drag-and-drop interface.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-4 mb-4">
+                    <div class="icon mb-3">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Secure Storage</h4>
+                    <p>All your files are stored securely and encrypted.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-4 mb-4">
+                    <div class="icon mb-3">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h4>Quick Search</h4>
+                    <p>Find your documents easily with our powerful search tool.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta text-center">
+        <div class="container">
+            <h2>Ready to get started?</h2>
+            <p>Join us today and experience the difference.</p>
+            <a href="/register" class="btn btn-light btn-lg">Sign Up Now</a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Brian Muhindi Mwangi. All rights reserved.</p>
+            <p>
+                <a href="#">Privacy Policy</a> |
+                <a href="#">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+
+</html>

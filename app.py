@@ -69,6 +69,19 @@ def log_activity(activity, user_data, url):
     connection.close()
 
 
+@app.route('/home')
+def landing_page():
+    return render_template('home.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -122,7 +135,7 @@ def login():
     return render_template('login.html')
 
 #Shows the username on header
-@app.route('/')
+@app.route('/dashboard')
 def dashboard():
     if 'username' not in session:
         flash('You need to log in first.', 'warning')
@@ -136,6 +149,55 @@ def dashboard():
 #         flash('You need to log in first.', 'warning')
 #         return redirect(url_for('login'))
 #     return render_template('dashboard.html')  # Render your dashboard template
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file part', 'danger')
+            return redirect(request.url)
+        file = request.files['file']
+        if file.filename == '':
+            flash('No selected file', 'danger')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            temp_file_path = os.path.join(INVOICE_PATH, filename)  # Temporary path for saving file
+
+            file.save(temp_file_path)
+
+            if 'INV-' in filename:
+                keyword_client = 'Bill To'
+                keyword_number = 'Invoice#'
+                target_folder = INVOICE_PATH
+            elif 'EST-' in filename:
+                keyword_client = 'Bill To'
+                keyword_number = '# EST-'
+                target_folder = ESTIMATE_PATH
+            else:
+                flash('Unknown document type', 'danger')
+                return redirect(request.url)
+
+            client_name, doc_number = extract_info(temp_file_path, keyword_client, keyword_number)
+            if client_name and doc_number:
+                new_filename = sanitize_filename(f"{client_name} {doc_number}.pdf")
+                new_file_path = os.path.join(target_folder, new_filename)
+
+                if os.path.exists(new_file_path):
+                    flash(f"A file named '{new_filename}' already exists. Please upload a new file.", 'warning')
+                    os.remove(temp_file_path)  # Clean up temp file
+                    return redirect(request.url)
+
+                os.rename(temp_file_path, new_file_path)
+                log_activity('File uploaded and renamed', client_name, new_file_path)
+                flash(f"File uploaded and renamed to {new_filename} in {target_folder}", 'success')
+                return redirect(url_for('upload_file'))
+            else:
+                flash("Could not extract necessary information from the file", 'danger')
+                os.remove(temp_file_path)  # Clean up temp file
+                return redirect(request.url)
+
+    return render_template('index.html')
 
 @app.route('/view_activity', methods=['GET', 'POST'])
 def view_activity():
@@ -340,54 +402,7 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
-@app.route('/upload', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file part', 'danger')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file', 'danger')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            temp_file_path = os.path.join(INVOICE_PATH, filename)  # Temporary path for saving file
 
-            file.save(temp_file_path)
-
-            if 'INV-' in filename:
-                keyword_client = 'Bill To'
-                keyword_number = 'Invoice#'
-                target_folder = INVOICE_PATH
-            elif 'EST-' in filename:
-                keyword_client = 'Bill To'
-                keyword_number = '# EST-'
-                target_folder = ESTIMATE_PATH
-            else:
-                flash('Unknown document type', 'danger')
-                return redirect(request.url)
-
-            client_name, doc_number = extract_info(temp_file_path, keyword_client, keyword_number)
-            if client_name and doc_number:
-                new_filename = sanitize_filename(f"{client_name} {doc_number}.pdf")
-                new_file_path = os.path.join(target_folder, new_filename)
-
-                if os.path.exists(new_file_path):
-                    flash(f"A file named '{new_filename}' already exists. Please upload a new file.", 'warning')
-                    os.remove(temp_file_path)  # Clean up temp file
-                    return redirect(request.url)
-
-                os.rename(temp_file_path, new_file_path)
-                log_activity('File uploaded and renamed', client_name, new_file_path)
-                flash(f"File uploaded and renamed to {new_filename} in {target_folder}", 'success')
-                return redirect(url_for('upload_file'))
-            else:
-                flash("Could not extract necessary information from the file", 'danger')
-                os.remove(temp_file_path)  # Clean up temp file
-                return redirect(request.url)
-
-    return render_template('index.html')
 
 @app.route('/manifest.json')
 def manifest():
